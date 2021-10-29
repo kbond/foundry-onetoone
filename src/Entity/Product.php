@@ -18,7 +18,7 @@ class Product
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=ProductInfo::class, inversedBy="product", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=ProductInfo::class, mappedBy="product", cascade={"persist", "remove"})
      */
     private $productInfo;
 
@@ -32,8 +32,13 @@ class Product
         return $this->productInfo;
     }
 
-    public function setProductInfo(?ProductInfo $productInfo): self
+    public function setProductInfo(ProductInfo $productInfo): self
     {
+        // set the owning side of the relation if necessary
+        if ($productInfo->getProduct() !== $this) {
+            $productInfo->setProduct($this);
+        }
+
         $this->productInfo = $productInfo;
 
         return $this;
